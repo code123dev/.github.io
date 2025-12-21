@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLink·阅读回声 - 《小王子》</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;500;600;700&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Noto Serif SC', 'Microsoft YaHei', serif;
+        }
+        
+        :root {
+            /* 偏蓝的青绿色系主题色 - 全局统一 */
+            --primary: #17a2b8; /* 主色：青蓝色（更偏蓝） */
+            --primary-light: #3dc4d8; /* 主色浅调 */
+            --primary-dark: #138496; /* 主色深调 */
+            --secondary: #20c997; /* 辅助色：青绿色 */
+            --accent: #3498db; /* 强调色：天蓝色 */
+            --accent-light: #5dade2; /* 强调色浅调 */
+            --light: #f8f9fa;
+            --light-gray: #f5f9fa; /* 浅灰色更淡，偏蓝 */
+            --dark: #116877; /* 深色文本（青蓝色配套） */
+            --gray: #5a8c94; /* 灰色文本适配青蓝色 */
+            --success: #28a745;
+            --shadow: 0 4px 20px rgba(23, 162, 184, 0.08); /* 阴影更淡，带青蓝色调 */
+            --shadow-hover: 0 8px 30px rgba(23, 162, 184, 0.12);
+            --radius: 16px;
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        body {
+            /* 1. 页面背景：更淡的蓝绿色渐变（核心修改） */
+            background: linear-gradient(135deg, #f0f9fb 0%, #e8f4f8 100%);
+            color: var(--dark);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.3) 0%, transparent 20%),
+                url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            z-index: -1;
+        }
+        
+        .floating-books {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+     
+        .floating-book {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(17, 104, 119, 0.2); /* 浮动书本图标颜色更淡，偏蓝 */
+            animation: float 15s infinite linear;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.98); /* 容器背景更白 */
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(23, 162, 184, 0.1); /* 容器边框更淡 */
+        }
+        
+        header {
+            /* 头部背景：偏蓝的青绿色渐变 */
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+            z-index: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .logo i {
+            font-size: 32px;
+            color: white;
+        }
+        
+        .logo h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .tagline {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
+            font-family: 'Ma Shan Zheng', cursive;
+        }
+        
+        .book-section {
+            padding: 40px 30px;
+            border-bottom: 1px solid rgba(23, 162, 184, 0.05); /* 分割线更淡 */
+            background: white;
+        }
+        
+        .book-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        @media (min-width: 768px) {
+            .book-header {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+        
+        .book-cover-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        
+        @media (min-width: 768px) {
+            .book-cover-container {
+                margin-right: 35px;
+                margin-bottom: 0;
+            }
+        }
+
+        /* 2. 书本封面样式 - 重点标注添加图片位置 */
+        .book-cover {
+            width: 220px;
+            height: 300px;
+            border-radius: var(--radius);
+            box-shadow: 0 15px 40px rgba(23, 162, 184, 0.15); /* 书本阴影更淡，偏蓝 */
+            /* ========== 小王子封面图片添加位置 ========== */
+            /* 方式1：使用背景图片（推荐）- 取消下面注释并替换图片URL */
+            /* background: url('你的小王子封面图片URL') center/cover no-repeat; */
+            /* background: url('img/小王子.jpg'); */
+            /* 方式2：如果没有图片，使用偏蓝的青绿色渐变背景（当前生效） */
+            background: url('img/小王子.jpg') center/cover no-repeat;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(800px) rotateY(-8deg);
+            transition: var(--transition);
+            font-family: 'ZCOOL QingKe HuangYou', cursive;
+        }
+        
+        .book-cover:hover {
+            transform: perspective(800px) rotateY(0deg);
+            box-shadow: 0 20px 50px rgba(23, 162, 184, 0.25);
+        }
+        
+        .book-cover::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%);
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-title {
+            font-size: 38px;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 10px;
+            line-height: 1.2;
+            position: relative;
+            display: inline-block;
+            /* 标题文字渐变：偏蓝的青绿色系 */
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .book-author {
+            font-size: 20px;
+            color: var(--gray);
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        
+        .book-description {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--gray);
+            margin-top: 20px;
+        }
+        
+        .highlight {
+            /* 高亮框背景：更淡的青蓝色调 */
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.08) 0%, rgba(52, 152, 219, 0.05) 100%);
+            padding: 25px;
+            border-radius: var(--radius);
+            margin-top: 25px;
+            border-left: 5px solid var(--primary); /* 左侧边框偏蓝的青色 */
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .highlight::before {
+            content: """;
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 80px;
+            color: rgba(23, 162, 184, 0.1); /* 引号颜色更淡 */
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+        
+        .highlight p {
+            position: relative;
+            z-index: 1;
+            font-style: italic;
+            font-size: 20px;
+            color: var(--dark);
+        }
+        
+        .echo-section {
+            padding: 40px 30px;
+            background: var(--light-gray); /* 浅灰色背景更淡，偏蓝 */
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            /* 标题下划线：偏蓝的青绿色渐变 */
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 2px;
+        }
+        
+        .section-title i {
+            margin-right: 12px;
+            color: var(--primary);
+        }
+        
+        .echo-form {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            margin-bottom: 35px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(23, 162, 184, 0.08); /* 表单边框更淡 */
+        }
+        
+        .echo-form:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-5px);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid rgba(23, 162, 184, 0.1); /* 输入框边框更淡 */
+            border-radius: 10px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: #fafbfc;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-light); /* 聚焦边框偏蓝的青色 */
+            box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.1); /* 聚焦阴影更淡 */
+            background: white;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        /* 3. 按钮样式：偏蓝的青绿色系 */
+        .btn {
+            /* 主按钮背景：偏蓝的青绿色渐变 */
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(23, 162, 184, 0.25); /* 按钮阴影更淡 */
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(23, 162, 184, 0.35);
+        }
+        
+        .btn i {
+            margin-right: 10px;
+        }
+        
+        .btn-accent {
+            /* 强调按钮背景：天蓝色渐变 */
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            box-shadow: 0 6px 15px rgba(52, 152, 219, 0.25); /* 强调按钮阴影更淡 */
+        }
+        
+        .btn-accent:hover {
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.35);
+        }
+        
+        .echo-wall {
+            margin-top: 35px;
+        }
+        
+        .echo-item {
+            background: white;
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary); /* 留言项左侧边框偏蓝的青色 */
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .echo-item::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            /* 留言项侧边渐变：偏蓝的青绿色系 */
+            background: linear-gradient(to bottom, var(--primary) 0%, var(--secondary) 100%);
+        }
+        
+        .echo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        .echo-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: var(--gray);
+        }
+        
+        .echo-author {
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        .echo-content {
+            font-size: 16px;
+            line-height: 1.7;
+            color: var(--gray);
+        }
+        
+        .nfc-hint {
+            /* NFC提示框：更淡的蓝绿色调 */
+            background: linear-gradient(135deg, #f0f9fb 0%, #e8f4f8 100%);
+            padding: 25px;
+            border-radius: var(--radius);
+            margin-top: 40px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(23, 162, 184, 0.08);
+        }
+        
+        .nfc-hint::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
+            animation: pulse 4s infinite linear;
+        }
+        
+        .nfc-hint i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .nfc-hint p {
+            font-size: 18px;
+            color: var(--primary-dark);
+            position: relative;
+            z-index: 1;
+            font-weight: 500;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: var(--gray);
+            font-size: 14px;
+            border-top: 1px solid rgba(23, 162, 184, 0.05);
+            background: white;
+        }
+        
+        .demo-note {
+            background: #f5f9fa; /* 提示框背景更淡，偏蓝 */
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 14px;
+            border-left: 5px solid var(--accent); /* 提示框边框天蓝色 */
+            display: flex;
+            align-items: center;
+        }
+        
+        .demo-note i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        /* 悬浮按钮：偏蓝的青绿色系 */
+        .floating-action {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 28px;
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.3);
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .floating-action:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.4);
+        }
+        
+        .book-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            /* 统计项背景：更淡的蓝绿色调 */
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.05) 0%, rgba(52, 152, 219, 0.03) 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            border: 1px solid rgba(23, 162, 184, 0.05);
+        }
+        
+        .stat-item i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .book-tags {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            /* 标签背景：更淡的蓝绿色调 */
+            background: linear-gradient(135deg, rgba(23, 162, 184, 0.08) 0%, rgba(52, 152, 219, 0.05) 100%);
+            color: var(--primary-dark);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(23, 162, 184, 0.05);
+        }
+        
+        .book-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .meta-label {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary-dark);
+        }
+        
+        /* 4. 进度条样式：偏蓝的青绿色系 */
+        .reading-progress {
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(23, 162, 184, 0.05); /* 进度条背景更淡 */
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            /* 进度条填充：偏蓝的青绿色渐变 */
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border-radius: 4px;
+            width: 65%;
+        }
+        
+        .interactive-elements {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .interactive-btn {
+            display: flex;
+            align-items: center;
+            /* 交互按钮背景：更淡的蓝绿色调 */
+            background: rgba(23, 162, 184, 0.05);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--primary-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .interactive-btn:hover {
+            background: rgba(23, 162, 184, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .interactive-btn i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .book-recommendations {
+            margin-top: 40px;
+        }
+        
+        .recommendation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .recommendation-item {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 1px solid rgba(23, 162, 184, 0.05);
+        }
+        
+        .recommendation-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+        
+        /* ========== 推荐书籍封面样式 - 统一控制 ========== */
+        /* 基础样式，所有推荐书籍封面共用 */
+        .rec-cover {
+            width: 80px;
+            height: 110px;
+            border-radius: 5px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            /* 默认渐变背景（无图片时显示） */
+            background: linear-gradient(135deg, #81ecec 0%, #00b894 100%);
+        }
+        
+        /* ========== 每本推荐书籍封面图片单独设置位置 ========== */
+        /* 1. 牧羊少年奇幻之旅封面 */
+        .rec-cover-shepherd {
+            /* 方式1：使用背景图片 - 取消下面注释并替换图片URL */
+            background: url('img/牧羊.jpg') center/cover no-repeat;
+        }
+        
+        /* 2. 天蓝色的彼岸封面 */
+        .rec-cover-blue {
+            /* 方式1：使用背景图片 - 取消下面注释并替换图片URL */
+            background: url('img/天蓝.jpg') center/cover no-repeat;
+        }
+        
+        /* 3. 追风筝的人封面 */
+        .rec-cover-kite {
+            /* 方式1：使用背景图片 - 取消下面注释并替换图片URL */
+            background: url('img/风筝.jpg') center/cover no-repeat;
+        }
+        
+        /* 4. 解忧杂货店封面 */
+        .rec-cover-grocery {
+            /* 方式1：使用背景图片 - 取消下面注释并替换图片URL */
+            background: url('img/解忧.jpg') center/cover no-repeat;
+        }
+        
+        .rec-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-books" id="floatingBooks"></div>
+    
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h1>BookLink·阅读回声</h1>
+            </div>
+            <p class="tagline">碰一碰，与书对话，与思想共鸣</p>
+        </header>
+        
+        <section class="book-section">
+            <div class="book-header">
+                <div class="book-cover-container">
+                    <!-- ========== 小王子封面图片添加位置（方式2） ========== -->
+                    <!-- 如果不想用CSS背景图，也可以直接在这里插入img标签： -->
+                    <!-- 
+                    <img src="你的小王子封面图片URL" alt="小王子封面" 
+                         style="width: 220px; height: 300px; border-radius: 16px; 
+                                box-shadow: 0 15px 40px rgba(23, 162, 184, 0.15);
+                                transform: perspective(800px) rotateY(-8deg);
+                                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                    -->
+                    <div class="book-cover">
+                        《小王子》
+                    </div>
+                </div>
+                <div class="book-info">
+                    <h1 class="book-title">小王子</h1>
+                    <p class="book-author">[法] 安托万·德·圣-埃克苏佩里</p>
+                    
+                    <div class="book-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-eye"></i>
+                            <span>1,248 次阅读</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-comment"></i>
+                            <span>86 条回声</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-heart"></i>
+                            <span>203 次共鸣</span>
+                        </div>
+                    </div>
+                    
+                    <div class="book-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">出版时间</span>
+                            <span class="meta-value">1943年</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">页数</span>
+                            <span class="meta-value">96页</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">ISBN</span>
+                            <span class="meta-value">978-7-02-000000-0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="book-tags">
+                        <div class="tag">童话</div>
+                        <div class="tag">哲学</div>
+                        <div class="tag">经典</div>
+                        <div class="tag">法国文学</div>
+                        <div class="tag">成长</div>
+                    </div>
+                    
+                    <div class="reading-progress">
+                        <div class="meta-label">阅读进度</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="interactive-elements">
+                        <button class="interactive-btn">
+                            <i class="fas fa-bookmark"></i>
+                            <span>收藏</span>
+                        </button>
+                        <button class="interactive-btn">
+                            <i class="fas fa-share-alt"></i>
+                            <span>分享</span>
+                        </button>
+                        <button class="interactive-btn">
+                            <i class="fas fa-qrcode"></i>
+                            <span>二维码</span>
+                        </button>
+                    </div>
+                    
+                    <div class="book-description">
+                        <p>《小王子》是法国作家安托万·德·圣-埃克苏佩里于1942年写成的著名儿童文学短篇小说。本书的主人公是来自外星球的小王子。书中以一位飞行员作为故事叙述者，讲述了小王子从自己星球出发前往地球的过程中，所经历的各种冒险。</p>
+                        
+                        <div class="highlight">
+                            <p>"真正重要的东西，是用眼睛看不见的，只有用心才能看清楚。"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="book-recommendations">
+                <h3 class="section-title"><i class="fas fa-book"></i> 相关推荐</h3>
+                <div class="recommendation-grid">
+                    <!-- ========== 1. 牧羊少年奇幻之旅 ========== -->
+                    <div class="recommendation-item">
+                        <!-- 方式2：直接使用img标签（替代div） -->
+                       <!-- 
+                        <img src="../../../../Desktop/头脑风暴/img/2341475e59a9ae2e514dbd774073d784.jpg" alt="牧羊少年奇幻之旅" 
+                             class="rec-cover" style="width: 80px; height: 110px; border-radius: 5px;"> -->
+                       
+                        <div class="rec-cover rec-cover-shepherd">《牧羊少年奇幻之旅》</div>
+                        <div class="rec-title">牧羊少年奇幻之旅</div>
+                    </div>
+                    
+                    <!-- ========== 2. 天蓝色的彼岸 ========== -->
+                    <div class="recommendation-item">
+                        <!-- 方式2：直接使用img标签（替代div） -->
+                       <!-- 
+                        <img src="../../../../Desktop/头脑风暴/img/5c6a72f596530a01ec42ea3201c8941a.jpg" alt="天蓝色的彼岸" 
+                             class="rec-cover" style="width: 80px; height: 110px; border-radius: 5px;"> -->
+                       
+                        <div class="rec-cover rec-cover-blue">《天蓝色的彼岸》</div>
+                        <div class="rec-title">天蓝色的彼岸</div>
+                    </div>
+                    
+                    <!-- ========== 3. 追风筝的人 ========== -->
+                    <div class="recommendation-item">
+                        <!-- 方式2：直接使用img标签（替代div） -->
+                        
+                        <!-- <img src="../../../../Desktop/头脑风暴/img/61d3fd47f3e0d2300caa036caec3ab8c.jpg" alt="追风筝的人" 
+                             class="rec-cover" style="width: 80px; height: 110px; border-radius: 5px;"> -->
+                       
+                        <div class="rec-cover rec-cover-kite">《追风筝的人》</div>
+                        <div class="rec-title">追风筝的人</div>
+                    </div>
+                    
+                    <!-- ========== 4. 解忧杂货店 ========== -->
+                    <div class="recommendation-item">
+                        <!-- 方式2：直接使用img标签（替代div） -->
+                        
+                        <!-- <img src="../../../../Desktop/头脑风暴/img/443ad03e4dc0c4f9907623e6f6b70acf.jpg" alt="解忧杂货店" 
+                             class="rec-cover" style="width: 80px; height: 110px; border-radius: 5px;"> -->
+                       
+                        <div class="rec-cover rec-cover-grocery">《解忧杂货店》</div>
+                        <div class="rec-title">解忧杂货店</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="echo-section">
+            <h2 class="section-title"><i class="fas fa-comments"></i> 阅读回声墙</h2>
+            
+            <div class="echo-form">
+                <h3 style="margin-bottom: 10px;">留下你的阅读回声</h3>
+                <p style="margin-bottom: 20px; color: var(--gray);">分享你的感悟，与更多读者共鸣</p>
+                
+                <div class="form-group">
+                    <label for="username">昵称（可选）</label>
+                    <input type="text" id="username" placeholder="匿名读者">
+                </div>
+                
+                <div class="form-group">
+                    <label for="message">你的阅读回声 *</label>
+                    <textarea id="message" placeholder="写下你的读后感、批注或疑问..."></textarea>
+                </div>
+                
+                <button class="btn btn-accent" id="submitEcho"><i class="fas fa-paper-plane"></i> 发布回声</button>
+                
+                <div class="demo-note">
+                    <i class="fas fa-info-circle"></i>
+                    <span>演示提示：这是一个前端演示，留言数据不会永久保存。实际项目中可使用Utterances等GitHub集成工具存储留言。</span>
+                </div>
+            </div>
+            
+            <div class="echo-wall" id="echoWall">
+                <h3 style="margin-bottom: 25px; font-size: 20px;">读者回声 <span id="echoCount" style="color: var(--primary);">(3)</span></h3>
+                
+                <div class="echo-item">
+                    <div class="echo-meta">
+                        <span class="echo-author">星空下的旅人</span>
+                        <span class="echo-date">2025-10-15</span>
+                    </div>
+                    <div class="echo-content">
+                        每次读《小王子》都有新的感悟。这次读到最后，当小王子决定回到他的星球时，我突然明白了什么是真正的"驯养"——是那些我们愿意花时间建立的联系，让彼此变得独一无二。
+                    </div>
+                </div>
+                
+                <div class="echo-item">
+                    <div class="echo-meta">
+                        <span class="echo-author">书海漫游者</span>
+                        <span class="echo-date">2025-09-28</span>
+                    </div>
+                    <div class="echo-content">
+                        玫瑰和小王子的关系让我思考了很久。有时候我们爱一个人，不是因为他们完美，而是因为我们在他们身上投入了时间和感情，使他们变得特别。
+                    </div>
+                </div>
+                
+                <div class="echo-item">
+                    <div class="echo-meta">
+                        <span class="echo-author">沉思的狐狸</span>
+                        <span class="echo-date">2025-09-10</span>
+                    </div>
+                    <div class="echo-content">
+                        "你为你的玫瑰花费了时间，这才使你的玫瑰变得如此重要。" 这句话让我泪目。我们生命中真正珍贵的东西，往往不是最耀眼的，而是那些我们为之付出真心的。
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nfc-hint">
+                <i class="fas fa-wifi"></i>
+                <p>用手机碰一碰书上的NFC标签，即可快速访问此页面</p>
+            </div>
+        </section>
+        
+        <footer>
+            <p>BookLink·阅读回声 &copy; 2025 | 让每本书都有它的数字灵魂</p>
+        </footer>
+    </div>
+
+    <div class="floating-action" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const submitBtn = document.getElementById('submitEcho');
+            const messageInput = document.getElementById('message');
+            const usernameInput = document.getElementById('username');
+            const echoWall = document.getElementById('echoWall');
+            const echoCount = document.getElementById('echoCount');
+            const scrollTopBtn = document.getElementById('scrollTop');
+            const floatingBooks = document.getElementById('floatingBooks');
+            
+            let echoCounter = 3; // 初始有3条示例留言
+            
+            // 创建浮动书本
+            function createFloatingBooks() {
+                const bookIcons = ['📚', '📖', '📕', '📗', '📘', '📙', '🔖'];
+                for (let i = 0; i < 15; i++) {
+                    const book = document.createElement('div');
+                    book.className = 'floating-book';
+                    book.textContent = bookIcons[Math.floor(Math.random() * bookIcons.length)];
+                    book.style.left = `${Math.random() * 100}%`;
+                    book.style.top = `${Math.random() * 100}%`;
+                    book.style.animationDelay = `${Math.random() * 15}s`;
+                    book.style.fontSize = `${Math.random() * 20 + 20}px`;
+                    floatingBooks.appendChild(book);
+                }
+            }
+            
+            createFloatingBooks();
+            
+            // 提交回声
+            submitBtn.addEventListener('click', function() {
+                const message = messageInput.value.trim();
+                const username = usernameInput.value.trim() || '匿名读者';
+                
+                if (!message) {
+                    alert('请填写你的阅读回声！');
+                    return;
+                }
+                
+                // 创建新的回声项
+                const echoItem = document.createElement('div');
+                echoItem.className = 'echo-item';
+                
+                const currentDate = new Date();
+                const dateString = `${currentDate.getFullYear()}-${(currentDate.getMonth()+1).toString().padStart(2, '0')}-${currentDate.getDate().toString().padStart(2, '0')}`;
+                
+                echoItem.innerHTML = `
+                    <div class="echo-meta">
+                        <span class="echo-author">${username}</span>
+                        <span class="echo-date">${dateString}</span>
+                    </div>
+                    <div class="echo-content">${message}</div>
+                `;
+                
+                // 添加到回声墙顶部
+                const echoList = echoWall.querySelectorAll('.echo-item');
+                if (echoList.length > 0) {
+                    echoWall.insertBefore(echoItem, echoList[0]);
+                } else {
+                    echoWall.appendChild(echoItem);
+                }
+                
+                // 更新计数器
+                echoCounter++;
+                echoCount.textContent = `(${echoCounter})`;
+                
+                // 清空输入框
+                messageInput.value = '';
+                usernameInput.value = '';
+                
+                // 更友好的提示
+                const successMsg = document.createElement('div');
+                successMsg.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: var(--success);
+                    color: white;
+                    padding: 15px 30px;
+                    border-radius: 10px;
+                    box-shadow: var(--shadow);
+                    z-index: 9999;
+                    animation: fadeInOut 3s ease;
+                `;
+                successMsg.textContent = '✅ 你的阅读回声已成功发布！';
+                document.body.appendChild(successMsg);
+                
+                // 3秒后移除提示
+                setTimeout(() => {
+                    successMsg.remove();
+                }, 3000);
+            });
+            
+            // 添加动画
+            document.head.insertAdjacentHTML('beforeend', `
+                <style>
+                    @keyframes fadeInOut {
+                        0% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                        20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                        80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                        100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+                    }
+                </style>
+            `);
+            
+            // 回到顶部功能
+            scrollTopBtn.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // 显示/隐藏回到顶部按钮
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollTopBtn.style.opacity = '1';
+                    scrollTopBtn.style.visibility = 'visible';
+                } else {
+                    scrollTopBtn.style.opacity = '0';
+                    scrollTopBtn.style.visibility = 'hidden';
+                }
+            });
+            
+            // 为交互按钮添加点击效果
+            const interactiveBtns = document.querySelectorAll('.interactive-btn');
+            interactiveBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const btnText = this.querySelector('span').textContent;
+                    alert(`你点击了${btnText}按钮，这是演示效果`);
+                });
+            });
+            
+            // 为推荐书籍添加点击效果
+            const recItems = document.querySelectorAll('.recommendation-item');
+            recItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const title = this.querySelector('.rec-title').textContent;
+                    alert(`你选择了《${title}》，即将跳转到该书详情页（演示效果）`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
